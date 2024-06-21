@@ -1,0 +1,113 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+struct Fruta {
+    int id;
+    string nombre;
+    float precio;
+    int cantidad;
+};
+
+vector<Fruta> inventario;
+int id_actual = 1;
+
+void crearFruta() {
+    Fruta nuevaFruta;
+    nuevaFruta.id = id_actual++;
+
+    cout << "Ingrese el nombre de la fruta: ";
+    cin >> nuevaFruta.nombre;
+
+    cout << "Ingrese el precio de la fruta: ";
+    cin >> nuevaFruta.precio;
+
+    cout << "Ingrese la cantidad de la fruta: ";
+    cin >> nuevaFruta.cantidad;
+ inventario.push_back(nuevaFruta);
+    std::cout << "Fruta añadida con éxito!" <<endl;
+}
+
+void leerFrutas() {
+    cout << "Inventario de frutas:" <<endl;
+    for (const auto& fruta : inventario) {
+        cout << "ID: " << fruta.id
+                  << ", Nombre: " << fruta.nombre
+                  << ", Precio: " << fruta.precio
+                  << ", Cantidad: " << fruta.cantidad << endl;
+    }
+}
+
+void actualizarFruta() {
+    int id;
+    cout << "Ingrese el ID de la fruta que desea actualizar: ";
+    cin >> id;
+
+    for (auto& fruta : inventario) {
+        if (fruta.id == id) {
+            cout << "Ingrese el nuevo nombre de la fruta: ";
+            cin >> fruta.nombre;
+
+            cout << "Ingrese el nuevo precio de la fruta: ";
+            cin >> fruta.precio;
+
+            cout << "Ingrese la nueva cantidad de la fruta: ";
+            cin >> fruta.cantidad;
+
+            cout << "Fruta actualizada con éxito!" << endl;
+            return;
+        }
+    }
+    cout << "Fruta con ID " << id << " no encontrada." << endl;
+}
+
+void borrarFruta() {
+    int id;
+    cout << "Ingrese el ID de la fruta que desea borrar: ";
+    cin >> id;
+
+    for (auto it = inventario.begin(); it != inventario.end(); ++it) {
+        if (it->id == id) {
+            inventario.erase(it);
+            cout << "Fruta borrada con éxito!" << endl;
+            return;
+        }
+    }
+    cout << "Fruta con ID " << id << " no encontrada." << endl;
+}
+
+int main() {
+    int opcion;
+    do {
+        cout << "Menu de la Fruteria" << endl;
+        cout << "1. Crear fruta" << endl;
+        cout << "2. Leer frutas" << endl;
+        cout << "3. Actualizar fruta" << endl;
+        cout << "4. Borrar fruta" << endl;
+        cout << "5. Salir" << endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                crearFruta();
+                break;
+            case 2:
+                leerFrutas();
+                break;
+            case 3:
+                actualizarFruta();
+                break;
+            case 4:
+                borrarFruta();
+                break;
+            case 5:
+                cout << "Saliendo..." << endl;
+                break;
+            default:
+                cout << "Opción no válida. Intente de nuevo." << endl;
+        }
+    } while (opcion != 5);
+
+    return 0;
+}
