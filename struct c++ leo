@@ -1,92 +1,107 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
 using namespace std;
 
-
-struct Tarea {
-    string descripcion;
-    string fechaLimite;
-    bool completada;
-
-    void imprimirInformacion() const {
-        cout << "Descripción: " << descripcion << endl;
-        cout << "Fecha Límite: " << fechaLimite << endl;
-        cout << "Completada: " << (completada ? "Sí" : "No") << endl;
-    }
+struct Calificacion {
+    int id;
+    string estudiante;
+    float nota;
 };
 
+vector<Calificacion> calificaciones;
+int id_actual = 1;
 
-void crearTarea(vector<Tarea>& listaTareas, const string& descripcion, const string& fechaLimite, bool completada);
-void leerTareas(const vector<Tarea>& listaTareas);
-bool actualizarTarea(vector<Tarea>& listaTareas, const string& descripcion, const string& nuevaFechaLimite, bool nuevaCompletada);
-bool eliminarTarea(vector<Tarea>& listaTareas, const string& descripcion);
+void crearCalificacion() {
+    Calificacion nuevaCalificacion;
+    nuevaCalificacion.id = id_actual++;
+
+    cout << "Ingrese el nombre del estudiante: ";
+    cin >> nuevaCalificacion.estudiante;
+
+    cout << "Ingrese la nota del estudiante: ";
+    cin >> nuevaCalificacion.nota;
+
+    calificaciones.push_back(nuevaCalificacion);
+    cout << "Calificación añadida con éxito!" << endl;
+}
+
+void leerCalificaciones() {
+    cout << "Lista de calificaciones:" << endl;
+    for (const auto& calificacion : calificaciones) {
+        cout << "ID: " << calificacion.id
+             << ", Estudiante: " << calificacion.estudiante
+             << ", Nota: " << calificacion.nota << endl;
+    }
+}
+
+void actualizarCalificacion() {
+    int id;
+    cout << "Ingrese el ID de la calificación que desea actualizar: ";
+    cin >> id;
+
+    for (auto& calificacion : calificaciones) {
+        if (calificacion.id == id) {
+            cout << "Ingrese el nuevo nombre del estudiante: ";
+            cin >> calificacion.estudiante;
+
+            cout << "Ingrese la nueva nota del estudiante: ";
+            cin >> calificacion.nota;
+
+            cout << "Calificación actualizada con éxito!" << endl;
+            return;
+        }
+    }
+    cout << "Calificación con ID " << id << " no encontrada." << endl;
+}
+
+void borrarCalificacion() {
+    int id;
+    cout << "Ingrese el ID de la calificación que desea borrar: ";
+    cin >> id;
+
+    for (auto it = calificaciones.begin(); it != calificaciones.end(); ++it) {
+        if (it->id == id) {
+            calificaciones.erase(it);
+            cout << "Calificación borrada con éxito!" << endl;
+            return;
+        }
+    }
+    cout << "Calificación con ID " << id << " no encontrada." << endl;
+}
 
 int main() {
-    vector<Tarea> listaTareas;
+    int opcion;
+    do {
+        cout << "Menu de Calificaciones" << endl;
+        cout << "1. Crear calificación" << endl;
+        cout << "2. Leer calificaciones" << endl;
+        cout << "3. Actualizar calificación" << endl;
+        cout << "4. Borrar calificación" << endl;
+        cout << "5. Salir" << endl;
+        cout << "Seleccione una opción: ";
+        cin >> opcion;
 
-    
-    crearTarea(listaTareas, "Completar proyecto", "2024-06-30", false);
-    crearTarea(listaTareas, "Estudiar para el examen", "2024-07-15", false);
-
-   
-    cout << "Tareas en la lista:" << endl;
-    leerTareas(listaTareas);
-
-    
-    if (actualizarTarea(listaTareas, "Completar proyecto", "2024-06-25", true)) {
-        cout << "\nTarea actualizada con éxito." << endl;
-    } else {
-        cout << "\nNo se encontró la tarea a actualizar." << endl;
-    }
-
-   
-    cout << "\nTareas en la lista después de la actualización:" << endl;
-    leerTareas(listaTareas);
-
-    
-    if (eliminarTarea(listaTareas, "Estudiar para el examen")) {
-        cout << "\nTarea eliminada con éxito." << endl;
-    } else {
-        cout << "\nNo se encontró la tarea a eliminar." << endl;
-    }
-
-    cout << "\nTareas en la lista después de la eliminación:" << endl;
-    leerTareas(listaTareas);
+        switch (opcion) {
+            case 1:
+                crearCalificacion();
+                break;
+            case 2:
+                leerCalificaciones();
+                break;
+            case 3:
+                actualizarCalificacion();
+                break;
+            case 4:
+                borrarCalificacion();
+                break;
+            case 5:
+                cout << "Saliendo..." << endl;
+                break;
+            default:
+                cout << "Opción no válida. Intente de nuevo." << endl;
+        }
+    } while (opcion != 5);
 
     return 0;
-}
-
-void crearTarea(vector<Tarea>& listaTareas, const string& descripcion, const string& fechaLimite, bool completada) {
-    Tarea nuevaTarea = {descripcion, fechaLimite, completada};
-    listaTareas.push_back(nuevaTarea);
-}
-
-void leerTareas(const vector<Tarea>& listaTareas) {
-    for (const auto& tarea : listaTareas) {
-        tarea.imprimirInformacion();
-        cout << endl;
-    }
-}
-
-bool actualizarTarea(vector<Tarea>& listaTareas, const string& descripcion, const string& nuevaFechaLimite, bool nuevaCompletada) {
-    for (auto& tarea : listaTareas) {
-        if (tarea.descripcion == descripcion) {
-            tarea.fechaLimite = nuevaFechaLimite;
-            tarea.completada = nuevaCompletada;
-            return true;
-        }
-    }
-    return false;
-}
-
-bool eliminarTarea(vector<Tarea>& listaTareas, const string& descripcion) {
-    for (auto it = listaTareas.begin(); it != listaTareas.end(); ++it) {
-        if (it->descripcion == descripcion) {
-            listaTareas.erase(it);
-            return true;
-        }
-    }
-    return false;
 }
